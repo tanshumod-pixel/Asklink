@@ -1,0 +1,193 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>A Question For You</title>
+
+<style>
+
+body{
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background:linear-gradient(135deg,#ff9ac2,#ffd6e7);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+.card{
+background:white;
+padding:40px;
+border-radius:20px;
+text-align:center;
+width:90%;
+max-width:380px;
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+animation:pop 0.7s ease;
+}
+
+h1{
+color:#ff2e75;
+min-height:60px;
+}
+
+.buttons{
+margin-top:30px;
+}
+
+button{
+padding:14px 28px;
+font-size:18px;
+border:none;
+border-radius:14px;
+cursor:pointer;
+margin:10px;
+transition:0.2s;
+}
+
+#yes{
+background:#ff2e75;
+color:white;
+box-shadow:0 6px 20px rgba(255,46,117,0.5);
+}
+
+#yes:hover{
+transform:scale(1.1);
+}
+
+#no{
+background:#e0e0e0;
+position:absolute;
+}
+
+@keyframes pop{
+0%{transform:scale(0.6);opacity:0;}
+100%{transform:scale(1);opacity:1;}
+}
+
+.heart{
+position:fixed;
+bottom:-20px;
+font-size:24px;
+animation:float 4s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0);opacity:1;}
+100%{transform:translateY(-900px);opacity:0;}
+}
+
+.confetti{
+position:fixed;
+top:-10px;
+width:8px;
+height:8px;
+background:red;
+animation:fall 3s linear infinite;
+}
+
+@keyframes fall{
+0%{transform:translateY(0) rotate(0);}
+100%{transform:translateY(800px) rotate(360deg);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+
+<h1 id="question"></h1>
+
+<div class="buttons">
+<button id="yes" onclick="yesClicked()">Yes 💖</button>
+<button id="no">No 🙈</button>
+</div>
+
+</div>
+
+<script>
+
+let text = "Divya, will you be forever mine? 💕";
+let i = 0;
+
+function typing(){
+if(i < text.length){
+document.getElementById("question").innerHTML += text.charAt(i);
+i++;
+setTimeout(typing,50);
+}
+}
+
+typing();
+
+let noBtn = document.getElementById("no");
+
+function moveButton(){
+
+let x = Math.random() * (window.innerWidth - 100);
+let y = Math.random() * (window.innerHeight - 50);
+
+noBtn.style.left = x + "px";
+noBtn.style.top = y + "px";
+
+}
+
+noBtn.addEventListener("mouseover", moveButton);
+noBtn.addEventListener("click", moveButton);
+noBtn.addEventListener("touchstart", moveButton);
+
+function yesClicked(){
+
+document.getElementById("card").innerHTML =
+"<h1>🎉 It's a date then! 💘</h1><p>I knew you'd say yes 😄</p>";
+
+celebrate();
+
+}
+
+function celebrate(){
+
+setInterval(() => {
+
+let heart = document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
+
+heart.style.left = Math.random()*100+"vw";
+heart.style.fontSize=(Math.random()*20+20)+"px";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>heart.remove(),4000);
+
+},150);
+
+setInterval(()=>{
+
+let confetti=document.createElement("div");
+confetti.className="confetti";
+
+confetti.style.left=Math.random()*100+"vw";
+confetti.style.background=
+["#ff2e75","#ffcc00","#00d4ff","#7dff7d"][Math.floor(Math.random()*4)];
+
+document.body.appendChild(confetti);
+
+setTimeout(()=>confetti.remove(),3000);
+
+},120);
+
+}
+
+</script>
+
+</body>
+</html>
+```
