@@ -4,89 +4,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Question For You</title>
+
+<title>Question</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,#ff9ac2,#ffd6e7);
+font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto;
+background:linear-gradient(135deg,#ff7eb3,#ff758c);
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
 overflow:hidden;
 }
 
 .card{
 background:white;
-padding:35px;
-border-radius:20px;
-text-align:center;
-width:90%;
+width:92%;
 max-width:380px;
-box-shadow:0 15px 40px rgba(0,0,0,0.25);
+border-radius:24px;
+padding:35px;
+box-shadow:0 20px 60px rgba(0,0,0,0.25);
+text-align:center;
+animation:cardEnter 0.6s ease;
+}
+
+@keyframes cardEnter{
+0%{transform:scale(.7);opacity:0}
+100%{transform:scale(1);opacity:1}
+}
+
+.profile{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#ffd6e7;
+margin:auto;
+margin-bottom:15px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:40px;
 }
 
 h1{
+font-size:20px;
 color:#ff2e75;
-font-size:22px;
+line-height:1.4;
 }
 
-#message{
+.message{
 margin-top:10px;
 color:#666;
-font-style:italic;
 height:24px;
+font-style:italic;
 }
 
 .buttons{
-margin-top:30px;
+margin-top:25px;
 }
 
 button{
-padding:14px 28px;
-font-size:18px;
 border:none;
-border-radius:14px;
+border-radius:30px;
+padding:14px 26px;
+font-size:17px;
 cursor:pointer;
-margin:10px;
-transition:0.3s;
+margin:8px;
+transition:0.25s;
 }
 
 #yes{
 background:#ff2e75;
 color:white;
+box-shadow:0 10px 30px rgba(255,46,117,0.4);
 }
 
 #no{
-background:#ddd;
+background:#eee;
 position:absolute;
 }
 
-.confetti{
+.heart{
 position:fixed;
-width:10px;
-height:10px;
-top:-10px;
-animation:fall 3s linear infinite;
+bottom:-20px;
+font-size:24px;
+animation:float 5s linear infinite;
 }
 
-@keyframes fall{
-0%{transform:translateY(0) rotate(0);}
-100%{transform:translateY(800px) rotate(360deg);}
+@keyframes float{
+0%{transform:translateY(0)}
+100%{transform:translateY(-900px)}
 }
 
-.firework{
+canvas{
 position:fixed;
-font-size:30px;
-animation:boom 1s ease-out forwards;
-}
-
-@keyframes boom{
-0%{transform:scale(0.2);opacity:1;}
-100%{transform:scale(2);opacity:0;}
+top:0;
+left:0;
+pointer-events:none;
 }
 
 </style>
@@ -94,16 +111,20 @@ animation:boom 1s ease-out forwards;
 
 <body>
 
+<canvas id="fireworks"></canvas>
+
 <div class="card" id="card">
 
+<div class="profile">😊</div>
+
 <h1>
-Should this awesome guy who has worked hard on this site and sent you this link get a fair chance to know you better and take you out on a date!! 💫
+Should this awesome guy who really like you and sent you this link get a fair chance to know you better and take you out on a date?😄
 </h1>
 
-<div id="message"></div>
+<div class="message" id="msg"></div>
 
 <div class="buttons">
-<button id="yes" onclick="yesClicked()">Yes😇</button>
+<button id="yes" onclick="yesClicked()">Yes ✔️</button>
 <button id="no">No ❌</button>
 </div>
 
@@ -111,77 +132,122 @@ Should this awesome guy who has worked hard on this site and sent you this link 
 
 <script>
 
-let noBtn = document.getElementById("no");
-let yesBtn = document.getElementById("yes");
-let message = document.getElementById("message");
+let yes=document.getElementById("yes");
+let no=document.getElementById("no");
+let msg=document.getElementById("msg");
 
-let scale = 1;
+let scale=1;
 
-let teasing = [
+let teasing=[
 "Are you sure? 😏",
 "Think again...",
 "Don't break his heart 🥺",
-"You know you want to press YES 😄",
-"Come on... give him a chance!"
+"You know you want to press YES",
+"Give him a chance 😄",
+"You can't escape that easily!"
 ];
 
-function moveButton(){
+function moveNo(){
 
-let x = Math.random()*(window.innerWidth-100);
-let y = Math.random()*(window.innerHeight-50);
+let x=Math.random()*(window.innerWidth-100);
+let y=Math.random()*(window.innerHeight-50);
 
-noBtn.style.left=x+"px";
-noBtn.style.top=y+"px";
+no.style.left=x+"px";
+no.style.top=y+"px";
 
-scale += 0.15;
-yesBtn.style.transform="scale("+scale+")";
+scale+=0.35;
+yes.style.transform="scale("+scale+")";
 
-message.innerHTML = teasing[Math.floor(Math.random()*teasing.length)];
+msg.innerHTML=teasing[Math.floor(Math.random()*teasing.length)];
+
 }
 
-noBtn.addEventListener("mouseover", moveButton);
-noBtn.addEventListener("click", moveButton);
-noBtn.addEventListener("touchstart", moveButton);
+no.addEventListener("mouseover",moveNo);
+no.addEventListener("click",moveNo);
+no.addEventListener("touchstart",moveNo);
 
 function yesClicked(){
 
-document.getElementById("card").innerHTML =
-"<h1>🎉 Thank you...Great choice!! ❤️☺️</h1><p>This might be the start of something fun 😉</p>";
+document.getElementById("card").innerHTML=
+"<h1>🎉 Good choice!</h1><p>Thank you!! Promise i won't let you down!!😇</p>";
 
-celebrate();
+startFireworks();
+hearts();
+
 }
 
-function celebrate(){
+function hearts(){
 
 setInterval(()=>{
 
-let confetti=document.createElement("div");
-confetti.className="confetti";
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="🎉";
 
-confetti.style.left=Math.random()*100+"vw";
-confetti.style.background=
-["#ff2e75","#ffcc00","#00d4ff","#7dff7d","#ff6b6b"][Math.floor(Math.random()*5)];
+h.style.left=Math.random()*100+"vw";
+h.style.fontSize=(Math.random()*20+20)+"px";
 
-document.body.appendChild(confetti);
+document.body.appendChild(h);
 
-setTimeout(()=>confetti.remove(),3000);
+setTimeout(()=>h.remove(),5000);
 
-},80);
+},200);
 
-setInterval(()=>{
+}
 
-let fire=document.createElement("div");
-fire.className="firework";
-fire.innerHTML="🎆";
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
 
-fire.style.left=Math.random()*100+"vw";
-fire.style.top=Math.random()*60+"vh";
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
-document.body.appendChild(fire);
+let particles=[];
 
-setTimeout(()=>fire.remove(),1000);
+function createFirework(){
 
-},400);
+let x=Math.random()*canvas.width;
+let y=Math.random()*canvas.height/2;
+
+for(let i=0;i<80;i++){
+
+particles.push({
+x:x,
+y:y,
+angle:Math.random()*2*Math.PI,
+speed:Math.random()*5+2,
+life:100
+});
+
+}
+
+}
+
+function update(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach((p,i)=>{
+
+p.x+=Math.cos(p.angle)*p.speed;
+p.y+=Math.sin(p.angle)*p.speed;
+p.life--;
+
+ctx.fillStyle="hsl("+Math.random()*360+",100%,60%)";
+ctx.fillRect(p.x,p.y,3,3);
+
+if(p.life<=0)particles.splice(i,1);
+
+});
+
+requestAnimationFrame(update);
+
+}
+
+function startFireworks(){
+
+setInterval(createFirework,600);
+
+update();
 
 }
 
