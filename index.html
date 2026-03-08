@@ -4,14 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>A Question For You</title>
 
 <style>
 
 body{
 margin:0;
-font-family: 'Segoe UI', sans-serif;
+font-family:Arial, sans-serif;
 background:linear-gradient(135deg,#ff9ac2,#ffd6e7);
 display:flex;
 justify-content:center;
@@ -22,18 +21,24 @@ overflow:hidden;
 
 .card{
 background:white;
-padding:40px;
+padding:35px;
 border-radius:20px;
 text-align:center;
 width:90%;
 max-width:380px;
 box-shadow:0 15px 40px rgba(0,0,0,0.25);
-animation:pop 0.7s ease;
 }
 
 h1{
 color:#ff2e75;
-min-height:60px;
+font-size:22px;
+}
+
+#message{
+margin-top:10px;
+color:#666;
+font-style:italic;
+height:24px;
 }
 
 .buttons{
@@ -47,53 +52,41 @@ border:none;
 border-radius:14px;
 cursor:pointer;
 margin:10px;
-transition:0.2s;
+transition:0.3s;
 }
 
 #yes{
 background:#ff2e75;
 color:white;
-box-shadow:0 6px 20px rgba(255,46,117,0.5);
-}
-
-#yes:hover{
-transform:scale(1.1);
 }
 
 #no{
-background:#e0e0e0;
+background:#ddd;
 position:absolute;
-}
-
-@keyframes pop{
-0%{transform:scale(0.6);opacity:0;}
-100%{transform:scale(1);opacity:1;}
-}
-
-.heart{
-position:fixed;
-bottom:-20px;
-font-size:24px;
-animation:float 4s linear infinite;
-}
-
-@keyframes float{
-0%{transform:translateY(0);opacity:1;}
-100%{transform:translateY(-900px);opacity:0;}
 }
 
 .confetti{
 position:fixed;
+width:10px;
+height:10px;
 top:-10px;
-width:8px;
-height:8px;
-background:red;
 animation:fall 3s linear infinite;
 }
 
 @keyframes fall{
 0%{transform:translateY(0) rotate(0);}
 100%{transform:translateY(800px) rotate(360deg);}
+}
+
+.firework{
+position:fixed;
+font-size:30px;
+animation:boom 1s ease-out forwards;
+}
+
+@keyframes boom{
+0%{transform:scale(0.2);opacity:1;}
+100%{transform:scale(2);opacity:0;}
 }
 
 </style>
@@ -103,10 +96,14 @@ animation:fall 3s linear infinite;
 
 <div class="card" id="card">
 
-<h1 id="question"></h1>
+<h1>
+Should this awesome guy who sent you this link get a fair chance to know you better and take you out on a date!! 💫
+</h1>
+
+<div id="message"></div>
 
 <div class="buttons">
-<button id="yes" onclick="yesClicked()">Yes 💖</button>
+<button id="yes" onclick="yesClicked()">Yes ❤️</button>
 <button id="no">No 🙈</button>
 </div>
 
@@ -114,29 +111,32 @@ animation:fall 3s linear infinite;
 
 <script>
 
-let text = "Should this awesome guy who sent you this link get a fair chance to know you and and ask you out for a date 😄";
-let i = 0;
-
-function typing(){
-if(i < text.length){
-document.getElementById("question").innerHTML += text.charAt(i);
-i++;
-setTimeout(typing,50);
-}
-}
-
-typing();
-
 let noBtn = document.getElementById("no");
+let yesBtn = document.getElementById("yes");
+let message = document.getElementById("message");
+
+let scale = 1;
+
+let teasing = [
+"Are you sure? 😏",
+"Think again...",
+"Don't break his heart 🥺",
+"You know you want to press YES 😄",
+"Come on... give him a chance!"
+];
 
 function moveButton(){
 
-let x = Math.random() * (window.innerWidth - 100);
-let y = Math.random() * (window.innerHeight - 50);
+let x = Math.random()*(window.innerWidth-100);
+let y = Math.random()*(window.innerHeight-50);
 
-noBtn.style.left = x + "px";
-noBtn.style.top = y + "px";
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
 
+scale += 0.15;
+yesBtn.style.transform="scale("+scale+")";
+
+message.innerHTML = teasing[Math.floor(Math.random()*teasing.length)];
 }
 
 noBtn.addEventListener("mouseover", moveButton);
@@ -146,28 +146,12 @@ noBtn.addEventListener("touchstart", moveButton);
 function yesClicked(){
 
 document.getElementById("card").innerHTML =
-"<h1>🎉 It's a date then! 💘</h1><p>I knew you'd say yes 😄</p>";
+"<h1>🎉 Awesome choice!! 💖</h1><p>This might be the start of something fun 😉</p>";
 
 celebrate();
-
 }
 
 function celebrate(){
-
-setInterval(() => {
-
-let heart = document.createElement("div");
-heart.className="heart";
-heart.innerHTML="💖";
-
-heart.style.left = Math.random()*100+"vw";
-heart.style.fontSize=(Math.random()*20+20)+"px";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>heart.remove(),4000);
-
-},150);
 
 setInterval(()=>{
 
@@ -176,13 +160,28 @@ confetti.className="confetti";
 
 confetti.style.left=Math.random()*100+"vw";
 confetti.style.background=
-["#ff2e75","#ffcc00","#00d4ff","#7dff7d"][Math.floor(Math.random()*4)];
+["#ff2e75","#ffcc00","#00d4ff","#7dff7d","#ff6b6b"][Math.floor(Math.random()*5)];
 
 document.body.appendChild(confetti);
 
 setTimeout(()=>confetti.remove(),3000);
 
-},120);
+},80);
+
+setInterval(()=>{
+
+let fire=document.createElement("div");
+fire.className="firework";
+fire.innerHTML="🎆";
+
+fire.style.left=Math.random()*100+"vw";
+fire.style.top=Math.random()*60+"vh";
+
+document.body.appendChild(fire);
+
+setTimeout(()=>fire.remove(),1000);
+
+},400);
 
 }
 
